@@ -4,7 +4,8 @@ import {
     ViewPropTypes,
     TouchableOpacity,
     StyleSheet,
-    Text
+    Text,
+    Image
 } from 'react-native';
 import PropTypes from 'prop-types';
 
@@ -25,7 +26,7 @@ const TabOption = ({
     tabBadgeContainerStyle, activeTabBadgeContainerStyle,
     tabBadgeStyle, activeTabBadgeStyle,
     onTabPress, textNumberOfLines,
-    allowFontScaling,
+    allowFontScaling, icon, tabIconStyle
 }) => {
     return (
         <TouchableOpacity style={[
@@ -36,31 +37,39 @@ const TabOption = ({
             lastTabStyle]}
             onPress={() => onTabPress(index)}
             activeOpacity={1}>
-            <View style={{ flexDirection: "row" }}>
-                <Text style={[
-                    styles.tabTextStyle,
-                    tabTextStyle,
-                    isTabActive ? [styles.activeTabTextStyle, activeTabTextStyle] : {}]}
-                    numberOfLines={textNumberOfLines}
-                    allowFontScaling={allowFontScaling}
-                    ellipsizeMode="tail">
-                    {text}
-                </Text>
+            <View style={styles.mainContainerStyle}>
                 {
-                    badge ?
-                        <View style={[
-                            styles.tabBadgeContainerStyle,
-                            tabBadgeContainerStyle,
-                            isTabActive ? [styles.activeTabBadgeContainerStyle, activeTabBadgeContainerStyle] : {}]}>
-                            <Text style={[
-                                styles.tabBadgeStyle,
-                                tabBadgeStyle,
-                                isTabActive ? [styles.activeTabBadgeStyle, activeTabBadgeStyle] : {}]}
-                                allowFontScaling={allowFontScaling}>
-                                {badge}
-                            </Text>
-                        </View> : false
+                    icon && icon !== null ?
+                        <Image style={tabIconStyle} source={icon} resizeMode={'contain'} />
+                        :
+                        null
                 }
+                <View style={{ flexDirection: "row" }}>
+                    <Text style={[
+                        styles.tabTextStyle,
+                        tabTextStyle,
+                        isTabActive ? [styles.activeTabTextStyle, activeTabTextStyle] : {}]}
+                        numberOfLines={textNumberOfLines}
+                        allowFontScaling={allowFontScaling}
+                        ellipsizeMode="tail">
+                        {text}
+                    </Text>
+                    {
+                        badge ?
+                            <View style={[
+                                styles.tabBadgeContainerStyle,
+                                tabBadgeContainerStyle,
+                                isTabActive ? [styles.activeTabBadgeContainerStyle, activeTabBadgeContainerStyle] : {}]}>
+                                <Text style={[
+                                    styles.tabBadgeStyle,
+                                    tabBadgeStyle,
+                                    isTabActive ? [styles.activeTabBadgeStyle, activeTabBadgeStyle] : {}]}
+                                    allowFontScaling={allowFontScaling}>
+                                    {badge}
+                                </Text>
+                            </View> : false
+                    }
+                </View>
             </View>
         </TouchableOpacity>
     );
@@ -74,7 +83,7 @@ const SegmentedControlTab = ({
     tabBadgeContainerStyle, activeTabBadgeContainerStyle,
     tabBadgeStyle, activeTabBadgeStyle,
     onTabPress, textNumberOfLines,
-    allowFontScaling,
+    allowFontScaling, tabIconStyle, valuesIcon
 }) => {
 
     const firstTabStyle = [{ borderRightWidth: values.length == 2 ? 1 : 0, borderTopLeftRadius: borderRadius, borderBottomLeftRadius: borderRadius }]
@@ -93,6 +102,7 @@ const SegmentedControlTab = ({
                             badge={badges && badges[index] ? badges[index] : false}
                             isTabActive={multiple ? selectedIndices.includes(index) : selectedIndex === index}
                             text={item}
+                            icon={valuesIcon[index]}
                             textNumberOfLines={textNumberOfLines}
                             onTabPress={(index) => handleTabPress(index, multiple, selectedIndex, onTabPress)}
                             firstTabStyle={index === 0 ? [{ borderRightWidth: 0 }, firstTabStyle] : {}}
@@ -100,6 +110,7 @@ const SegmentedControlTab = ({
                             tabStyle={[tabStyle, index !== 0 && index !== values.length - 1 ? { marginLeft: -1 } : {}]}
                             activeTabStyle={activeTabStyle}
                             tabTextStyle={tabTextStyle}
+                            tabIconStyle={tabIconStyle}
                             activeTabTextStyle={activeTabTextStyle}
                             tabBadgeContainerStyle={tabBadgeContainerStyle}
                             activeTabBadgeContainerStyle={activeTabBadgeContainerStyle}
@@ -116,6 +127,7 @@ const SegmentedControlTab = ({
 
 SegmentedControlTab.propTypes = {
     values: PropTypes.array,
+    valuesIcon: PropTypes.array,
     badges: PropTypes.array,
     multiple: PropTypes.bool,
     onTabPress: PropTypes.func,
@@ -125,6 +137,7 @@ SegmentedControlTab.propTypes = {
     tabStyle: ViewPropTypes.style,
     activeTabStyle: ViewPropTypes.style,
     tabTextStyle: Text.propTypes.style,
+    tabIconStyle: Image.propTypes.style,
     activeTabTextStyle: Text.propTypes.style,
     tabBadgeContainerStyle: Text.propTypes.style,
     activeTabBadgeContainerStyle: Text.propTypes.style,
@@ -137,6 +150,7 @@ SegmentedControlTab.propTypes = {
 
 SegmentedControlTab.defaultProps = {
     values: ['One', 'Two', 'Three'],
+    valuesIcon: [null, null, null],
     badges: ['', '', ''],
     multiple: false,
     selectedIndex: 0,
@@ -146,6 +160,7 @@ SegmentedControlTab.defaultProps = {
     tabStyle: {},
     activeTabStyle: {},
     tabTextStyle: {},
+    tabIconStyle: {},
     activeTabTextStyle: {},
     tabBadgeContainerStyle: {},
     activeTabBadgeContainerStyle: {},
@@ -197,6 +212,10 @@ const styles = StyleSheet.create({
     },
     activeTabBadgeStyle: {
         color: 'black'
+    },
+    mainContainerStyle: { 
+        alignItems: 'center', 
+        justifyContent: 'center' 
     }
 });
 
