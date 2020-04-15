@@ -26,7 +26,7 @@ const TabOption = ({
     tabBadgeContainerStyle, activeTabBadgeContainerStyle,
     tabBadgeStyle, activeTabBadgeStyle,
     onTabPress, textNumberOfLines,
-    allowFontScaling, icon, tabIconStyle
+    allowFontScaling, icon, tabIconStyle, showTabText
 }) => {
     return (
         <TouchableOpacity style={[
@@ -45,7 +45,8 @@ const TabOption = ({
                         null
                 }
                 <View style={{ flexDirection: "row" }}>
-                    <Text style={[
+                    {showTabText
+                    ?<Text style={[
                         styles.tabTextStyle,
                         tabTextStyle,
                         isTabActive ? [styles.activeTabTextStyle, activeTabTextStyle] : {}]}
@@ -54,6 +55,8 @@ const TabOption = ({
                         ellipsizeMode="tail">
                         {text}
                     </Text>
+                    : null
+                    }
                     {
                         badge ?
                             <View style={[
@@ -83,7 +86,7 @@ const SegmentedControlTab = ({
     tabBadgeContainerStyle, activeTabBadgeContainerStyle,
     tabBadgeStyle, activeTabBadgeStyle,
     onTabPress, textNumberOfLines,
-    allowFontScaling, tabIconStyle, valuesIcon, forceExtremeStyle = false
+    allowFontScaling, tabIconStyle, valuesIcon, forceExtremeStyle = false, showTabText
 }) => {
 
     const firstTabStyle = forceExtremeStyle ? {} : [{ borderRightWidth: values.length == 2 ? 1 : 0, borderTopLeftRadius: borderRadius, borderBottomLeftRadius: borderRadius }]
@@ -103,6 +106,7 @@ const SegmentedControlTab = ({
                             isTabActive={multiple ? selectedIndices.includes(index) : selectedIndex === index}
                             text={item}
                             icon={valuesIcon[index]}
+                            showTabText={showTabText}
                             textNumberOfLines={textNumberOfLines}
                             onTabPress={(index) => handleTabPress(index, multiple, selectedIndex, onTabPress)}
                             firstTabStyle={index === 0 ? [{ borderRightWidth: 0 }, firstTabStyle] : {}}
@@ -128,6 +132,7 @@ const SegmentedControlTab = ({
 SegmentedControlTab.propTypes = {
     values: PropTypes.array,
     valuesIcon: PropTypes.array,
+    showTabText: PropTypes.bool,
     badges: PropTypes.array,
     multiple: PropTypes.bool,
     onTabPress: PropTypes.func,
@@ -151,6 +156,7 @@ SegmentedControlTab.propTypes = {
 SegmentedControlTab.defaultProps = {
     values: ['One', 'Two', 'Three'],
     valuesIcon: [null, null, null],
+    showTabText: true,
     badges: ['', '', ''],
     multiple: false,
     selectedIndex: 0,
